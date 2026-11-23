@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>의류 판매가 계산기</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: 입력 패널(왼쪽/위) + 쇼핑몰별 판매가 카드(오른쪽/아래). 원단 태그 같은 차분한 톤 */
+:root{
+  --bg:#f3f4f1; --surface:#ffffff; --fg:#1d2320; --muted:#626b66; --line:#dde1dc;
+  --accent:#2f5d50; --accent-soft:#e3ece8; --input:#fffbe6; --input-line:#e6d98a;
+  --good:#2f7a4b; --bad:#b3402f;
+  --sans:"IBM Plex Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141816; --surface:#1d2321; --fg:#e8ece9; --muted:#9aa49f; --line:#2f3733;
+  --accent:#7fbfa9; --accent-soft:#22332d; --input:#2a2716; --input-line:#5a5226;
+  --good:#6fcf92; --bad:#ef8a78; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141816; --surface:#1d2321; --fg:#e8ece9; --muted:#9aa49f; --line:#2f3733;
+  --accent:#7fbfa9; --accent-soft:#22332d; --input:#2a2716; --input-line:#5a5226;
+  --good:#6fcf92; --bad:#ef8a78; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding-block:20px 48px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{display:flex;flex-direction:column;gap:4px;margin-bottom:18px}
+h1{font-size:1.5rem;margin:0;text-wrap:balance;letter-spacing:-.01em}
+.sub{color:var(--muted);margin:0;font-size:.9rem}
+.grid{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:14px}
+@media (min-width:861px){.panel{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px)}}
+.panel h2,.section-title{font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0;font-weight:600}
+.field{display:grid;grid-template-columns:1fr 132px;gap:8px;align-items:center}
+.field label{font-size:.92rem}
+.field small{display:block;color:var(--muted);font-size:.76rem;line-height:1.35}
+.inp{display:flex;align-items:center;background:var(--input);border:1px solid var(--input-line);border-radius:7px;padding:0 8px;min-width:0}
+.inp input{width:100%;min-width:0;border:0;background:transparent;color:var(--fg);font:600 1rem var(--mono);text-align:right;padding:8px 0;outline:none}
+.inp span{color:var(--muted);font-size:.85rem;margin-left:4px}
+.inp:focus-within{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.group{display:flex;flex-direction:column;gap:10px;padding-top:12px;border-top:1px dashed var(--line)}
+.lbl-edit{border:0;border-bottom:1px dashed var(--line);background:transparent;color:var(--fg);font:inherit;font-size:.92rem;width:100%;padding:2px 0}
+.lbl-edit:focus{outline:none;border-color:var(--accent)}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+button{font:inherit;font-size:.85rem;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:7px;padding:7px 12px;cursor:pointer}
+button:hover{border-color:var(--accent)}
+button:focus-visible,.lbl-edit:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.card-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.card-head h3{margin:0;font-size:1.05rem}
+.rate{width:96px}
+.price{background:var(--accent-soft);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column}
+.price .k{font-size:.78rem;color:var(--muted)}
+.price .v{font:600 1.7rem var(--mono);color:var(--accent);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.price .v small{font-size:.9rem;margin-left:2px}
+table{width:100%;border-collapse:collapse;font-size:.84rem}
+td{padding:3px 0;vertical-align:top}
+td.n{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.sum td{border-top:1px solid var(--line);font-weight:600;padding-top:6px}
+tr.minus td:first-child{color:var(--muted);padding-left:10px}
+tr.final td{font-weight:700;font-size:.95rem}
+.pos{color:var(--good)} .neg{color:var(--bad)}
+.margin{font-size:.78rem;color:var(--muted)}
+.err{color:var(--bad);font-size:.85rem}
+details{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-top:18px;font-size:.88rem;color:var(--muted)}
+summary{cursor:pointer;color:var(--fg);font-weight:600}
+details code{font-family:var(--mono);font-size:.82rem;background:var(--accent-soft);padding:1px 5px;border-radius:4px;color:var(--fg);word-break:break-all}
+.note{font-size:.8rem;color:var(--muted);margin:12px 0 0}
+.toast{font-size:.8rem;color:var(--good);min-height:1.2em}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <h1>의류 판매가 계산기</h1>
+    <p class="sub">노란 칸만 바꾸면 쇼핑몰별 판매가와 한 벌당 남는 돈이 바로 계산됩니다. (원, 옷 한 벌 기준)</p>
+  </header>
+
+  <div class="grid">
+    <aside class="panel" aria-label="입력값">
+      <h2>기본 입력</h2>
+      <div class="field"><label for="cost">원가 (부가세 포함)<small>매입가·제작비. 원가 부가세는 돌려받는다고 계산</small></label>
+        <div class="inp"><input id="cost" inputmode="numeric" data-k="cost"><span>원</span></div></div>
+      <div class="field"><label for="profit">이익금액 (한 벌당)<small>법인세까지 낸 뒤 남기고 싶은 돈</small></label>
+        <div class="inp"><input id="profit" inputmode="numeric" data-k="profit"><span>원</span></div></div>
+      <div class="field"><label for="unit">판매가 올림 단위<small>이 단위로 올림</small></label>
+        <div class="inp"><input id="unit" inputmode="numeric" data-k="unit"><span>원</span></div></div>
+
+      <div class="group">
+        <h2>한 벌당 공통 지출 (부가세 제외)</h2>
+        <div class="field"><label for="ship">배송비<small>내가 내는 택배비</small></label>
+          <div class="inp"><input id="ship" inputmode="numeric" data-k="ship"><span>원</span></div></div>
+        <div class="field"><label for="pack">포장비<small>폴리백·박스 등</small></label>
+          <div class="inp"><input id="pack" inputmode="numeric" data-k="pack"><span>원</span></div></div>
+        <div class="field"><label for="ret">반품비 (평균)<small>예: 반품률 10% × 왕복 6,000원</small></label>
+          <div class="inp"><input id="ret" inputmode="numeric" data-k="ret"><span>원</span></div></div>
+        <div class="field"><input class="lbl-edit" id="etc1name" aria-label="기타 지출 1 이름" data-k="etc1name">
+          <div class="inp"><input id="etc1" inputmode="numeric" data-k="etc1" aria-label="기타 지출 1 금액"><span>원</span></div></div>
+        <div class="field"><input class="lbl-edit" id="etc2name" aria-label="기타 지출 2 이름" data-k="etc2name">
+          <div class="inp"><input id="etc2" inputmode="numeric" data-k="etc2" aria-label="기타 지출 2 금액"><span>원</span></div></div>
+      </div>
+
+      <div class="group">
+        <h2>세율</h2>
+        <div class="field"><label for="vat">부가세율</label>
+          <div class="inp"><input id="vat" inputmode="decimal" data-k="vat" data-pct><span>%</span></div></div>
+        <div class="field"><label for="tax">법인세율<small>지방소득세 포함 (2억 이하 11%)</small></label>
+          <div class="inp"><input id="tax" inputmode="decimal" data-k="tax" data-pct><span>%</span></div></div>
+      </div>
+
+      <div class="actions">
+        <button type="button" id="reset">처음 값으로 되돌리기</button>
+      </div>
+      <div class="toast" id="toast" aria-live="polite"></div>
+    </aside>
+
+    <main>
+      <p class="section-title" style="margin-bottom:10px">쇼핑몰별 판매가 · 수수료율은 카드에서 바로 수정</p>
+      <div class="cards" id="cards"></div>
+      <p class="note">※ 수수료율 기본값(W컨셉 27% · 에이블리 7% · 무신사 28% · 29CM 28% · 지그재그 12%)은 확인되지 않은 예시값입니다. 판매가에 가장 크게 영향을 주므로 실제 입점 계약 요율로 바꿔 주세요. 수수료에 붙는 부가세는 돌려받는다고 계산합니다. 입력값은 이 기기 브라우저에 저장됩니다.</p>
+
+      <details>
+        <summary>계산 방법</summary>
+        <p>판매가는 아래 식으로 구한 뒤 올림 단위로 올립니다. 그래서 실제 남는 돈은 이익금액보다 조금 많습니다.</p>
+        <p><code>판매가 = 올림( (이익금액 ÷ (1 − 법인세율) + 원가 ÷ (1 + 부가세율) + 배송·포장·반품·기타) ÷ (1 ÷ (1 + 부가세율) − 수수료율) )</code></p>
+        <p>매출 = 판매가 − 부가세(판매가 × 10/110). 영업이익 = 매출 − 원가(부가세 제외) − 수수료(판매가 × 수수료율) − 배송비 − 포장비 − 반품비 − 기타. 남는 돈 = 영업이익 − 법인세(영업이익 × 법인세율). 법인세는 1년 이익 전체에 매기는 세금이라 한 벌당 값은 어림값입니다.</p>
+      </details>
+    </main>
+  </div>
+</div>
+
+<script>
+(function(){
+  var DEF = {cost:15000,profit:5000,unit:1000,ship:3000,pack:500,ret:600,etc1:0,etc2:0,
+    etc1name:"기타 지출 1",etc2name:"기타 지출 2",vat:10,tax:11,
+    malls:[{n:"W컨셉",r:27},{n:"에이블리",r:7},{n:"무신사",r:28},{n:"29CM",r:28},{n:"지그재그",r:12}]};
+  var KEY="apparel-price-calc-v1", s;
+  try{ s=JSON.parse(localStorage.getItem(KEY)); }catch(e){}
+  if(!s||!s.malls) s=JSON.parse(JSON.stringify(DEF));
+
+  var fmt=function(n){return Math.round(n).toLocaleString("ko-KR");};
+  var num=function(str){var v=parseFloat(String(str).replace(/[^0-9.\-]/g,""));return isFinite(v)?v:0;};
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(s));}catch(e){}}
+
+  // 기본 입력칸 연결
+  document.querySelectorAll("[data-k]").forEach(function(el){
+    var k=el.dataset.k, isText=k.slice(-4)==="name", isPct=el.hasAttribute("data-pct");
+    el.value = isText ? s[k] : (isPct ? s[k] : fmt(s[k]));
+    el.addEventListener("input",function(){
+      if(isText){ s[k]=el.value; }
+      else{
+        s[k]=num(el.value);
+        if(!isPct){ var pos=el.value.length-el.selectionStart; el.value=el.value.trim()===""?"":fmt(s[k]);
+          var p=Math.max(0,el.value.length-pos); try{el.setSelectionRange(p,p);}catch(e){} }
+      }
+      save(); calc();
+    });
+    el.addEventListener("focus",function(){ if(!isText) setTimeout(function(){el.select();},0); });
+  });
+
+  var cards=document.getElementById("cards");
+  function buildCards(){
+    cards.innerHTML="";
+    s.malls.forEach(function(m,i){
+      var c=document.createElement("section"); c.className="card";
+      c.innerHTML='<div class="card-head"><h3></h3><div class="inp rate"><input id="rate'+i+'" inputmode="decimal" aria-label="수수료율"><span>%</span></div></div>'+
+        '<div class="price"><span class="k">판매가 (부가세 포함)</span><span class="v" id="p'+i+'"></span><span class="margin" id="m'+i+'"></span></div>'+
+        '<div id="t'+i+'"></div>';
+      c.querySelector("h3").textContent=m.n;
+      var r=c.querySelector("input"); r.value=m.r;
+      r.addEventListener("input",function(){ m.r=num(r.value); save(); calc(); });
+      r.addEventListener("focus",function(){ setTimeout(function(){r.select();},0); });
+      cards.appendChild(c);
+    });
+  }
+
+  function row(label,val,cls){return '<tr class="'+(cls||"")+'"><td>'+label+'</td><td class="n">'+val+'</td></tr>';}
+  function esc(t){var d=document.createElement("div");d.textContent=t;return d.innerHTML;}
+
+  function calc(){
+    var v=s.vat/100, t=s.tax/100, unit=s.unit>0?s.unit:1;
+    var costEx=s.cost/(1+v);
+    var extras=s.ship+s.pack+s.ret+s.etc1+s.etc2;
+    s.malls.forEach(function(m,i){
+      var c=m.r/100, P=document.getElementById("p"+i), T=document.getElementById("t"+i), M=document.getElementById("m"+i);
+      var den=1/(1+v)-c;
+      if(den<=0 || t>=1){ P.textContent="계산 불가"; M.textContent=""; T.innerHTML='<p class="err">수수료율이 너무 높습니다. 수수료율이 '+(100/(1+v)).toFixed(1)+'%보다 작아야 합니다.</p>'; return; }
+      var price=Math.ceil(((s.profit/(1-t))+costEx+extras)/den/unit)*unit;
+      var vatAmt=price*v/(1+v), sales=price-vatAmt, fee=price*c;
+      var op=sales-costEx-fee-extras, ctax=Math.max(0,op)*t, net=op-ctax;
+      P.innerHTML=fmt(price)+'<small>원</small>';
+      M.textContent="판매가 대비 남는 돈 "+(price>0?(net/price*100).toFixed(1):"0")+"% · 원가 대비 "+(s.cost>0?(price/s.cost).toFixed(2):"-")+"배";
+      T.innerHTML='<table>'+
+        row("− 부가세",fmt(vatAmt),"minus")+
+        row("매출 (부가세 제외)",fmt(sales),"sum")+
+        row("− 원가 (부가세 제외)",fmt(costEx),"minus")+
+        row("− 판매 수수료",fmt(fee),"minus")+
+        row("− 배송비",fmt(s.ship),"minus")+
+        row("− 포장비",fmt(s.pack),"minus")+
+        row("− 반품비",fmt(s.ret),"minus")+
+        (s.etc1?row("− "+esc(s.etc1name),fmt(s.etc1),"minus"):"")+
+        (s.etc2?row("− "+esc(s.etc2name),fmt(s.etc2),"minus"):"")+
+        row("영업이익 (세전)",fmt(op),"sum")+
+        row("− 법인세",fmt(ctax),"minus")+
+        row("남는 돈 (세후)",'<span class="'+(net>=s.profit?"pos":"neg")+'">'+fmt(net)+'원</span>',"sum final")+
+        '</table>';
+    });
+  }
+
+  document.getElementById("reset").addEventListener("click",function(){
+    s=JSON.parse(JSON.stringify(DEF)); save();
+    document.querySelectorAll("[data-k]").forEach(function(el){var k=el.dataset.k;
+      el.value=(k.slice(-4)==="name"||el.hasAttribute("data-pct"))?s[k]:fmt(s[k]);});
+    buildCards(); calc();
+    var tt=document.getElementById("toast"); tt.textContent="처음 값으로 되돌렸습니다."; setTimeout(function(){tt.textContent="";},2500);
+  });
+
+  buildCards(); calc();
+})();
+</script>
+</body>
+</html>
