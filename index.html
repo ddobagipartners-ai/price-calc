@@ -220,6 +220,11 @@ main{margin-top:0;padding-top:12px}
 .more{width:100%;min-height:44px;border:0;border-top:1px solid var(--line);background:var(--surface-2);color:var(--accent);font:700 12.6px var(--sans);display:flex;align-items:center;justify-content:center;gap:4px;cursor:pointer}
 .more svg{width:16px;height:16px;transition:transform .2s}
 .more[aria-expanded="true"] svg{transform:rotate(180deg)}
+
+.src{border-top:1px solid var(--line);padding:0 12px 14px;font-size:11.2px;color:var(--muted)}
+.src summary{cursor:pointer;min-height:44px;display:flex;align-items:center;color:var(--accent);font-weight:700}
+.src ul{margin:0;padding-left:16px;display:grid;gap:6px;line-height:1.5}
+.src b{color:var(--fg)}
 </style>
 </head>
 <body>
@@ -260,7 +265,18 @@ main{margin-top:0;padding-top:12px}
         <div class="results-head"><h2>쇼핑몰별 판매가</h2><span>수수료율 수정 가능</span></div>
         <div id="malls"></div>
         <button type="button" class="more" id="more" aria-expanded="false" aria-controls="malls"><span id="more-txt">플랫폼 더보기</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
-        <p class="note">쇼핑몰 수수료율 기본값은 모두 확인되지 않은 예시값이에요. 판매가에 가장 크게 영향을 주니 실제 계약 요율로 바꿔 주세요. 입력값은 이 기기에 저장돼요.</p>
+        <p class="note">수수료율 기본값은 인터넷에 공개된 자료로 넣은 참고값이에요(2026년 11월 확인). 쇼핑몰마다 입점 계약으로 정해지니 내 계약 요율로 바꿔 주세요. 입력값은 이 기기에 저장돼요.</p>
+        <details class="src"><summary>수수료율 출처 보기</summary><ul>
+          <li><b>W컨셉 28.3%</b> 중소기업중앙회 패션플랫폼 입점업체 조사(2021), 2025년 셀러 가이드도 평균 28.3%</li>
+          <li><b>29CM 28%</b> · <b>무신사 27.6%</b> 같은 조사(2021). 2026년 셀러 블로그는 무신사 25~35%</li>
+          <li><b>에이블리 12.5%</b> 셀러 블로그 10~15%(결제수수료 포함, 2026)의 중간값</li>
+          <li><b>지그재그 11%</b> 판매수수료 5.5~10% + 결제수수료 약 3.3%(2026 셀러 블로그) 추정</li>
+          <li><b>네이버 6%</b> 스마트스토어 판매수수료 2.73% + 카드 결제수수료 최대 3.3%(2025)</li>
+          <li><b>쿠팡 10.8%</b> 마켓플레이스 패션의류 카테고리(2025), 별도로 월 서비스이용료가 있을 수 있음</li>
+          <li><b>롯데온 11%</b> 카테고리별 5~15%, 평균 약 11%(2024~2025 셀러 가이드) 추정</li>
+          <li><b>CJ온스타일 31.7%</b> 공정위 유통거래 실태조사 실질수수료율(2022, 배송비 포함)</li>
+          <li><b>한섬 30%</b> 공개 자료를 찾지 못해 백화점 수준으로 넣은 예시값</li>
+        </ul></details>
       </section>
       <details class="card settings" id="settings">
         <summary>
@@ -332,8 +348,9 @@ main{margin-top:0;padding-top:12px}
 (function(){
   var DEF={cost:15000,profit:5000,unit:1000,ship:0,pack:0,ret:0,etc1:0,etc2:0,
     etc1name:"기타 지출 1",etc2name:"기타 지출 2",vat:10,tax:11,
-    malls:[{n:"W컨셉",r:27},{n:"에이블리",r:7},{n:"무신사",r:28},{n:"29CM",r:28},{n:"지그재그",r:12},
-      {n:"한섬",r:30},{n:"네이버",r:6},{n:"쿠팡",r:11},{n:"롯데온",r:15},{n:"CJ온스타일",r:30}]};
+    malls:[{n:"W컨셉",r:28.3},{n:"에이블리",r:12.5},{n:"무신사",r:27.6},{n:"29CM",r:28},{n:"지그재그",r:11},
+      {n:"한섬",r:30},{n:"네이버",r:6},{n:"쿠팡",r:10.8},{n:"롯데온",r:11},{n:"CJ온스타일",r:31.7}]};
+  var OLD_EXAMPLE={"W컨셉":27,"에이블리":7,"무신사":28,"지그재그":12,"쿠팡":11,"롯데온":15,"CJ온스타일":30};
   var LOGO={"W컨셉":["wconcept.co.kr","#111"],"에이블리":["a-bly.com","#ff4f7b"],"무신사":["musinsa.com","#000"],"29CM":["29cm.co.kr","#111"],"지그재그":["zigzag.kr","#fa5c8b"],
     "한섬":["thehandsome.com","#1a1a1a"],"네이버":["smartstore.naver.com","#03c75a"],"쿠팡":["coupang.com","#e52528"],"롯데온":["lotteon.com","#e60012"],"CJ온스타일":["cjonstyle.com","#7c3aed"]};
   var KEY="apparel-price-calc-v2",s;
@@ -341,6 +358,7 @@ main{margin-top:0;padding-top:12px}
   if(!s||!s.malls) s=JSON.parse(JSON.stringify(DEF));
   for(var k in DEF) if(s[k]===undefined) s[k]=DEF[k];
   DEF.malls.forEach(function(m){if(!s.malls.some(function(x){return x.n===m.n;}))s.malls.push({n:m.n,r:m.r});});
+  if(!s.ratesV2){s.malls.forEach(function(m){if(OLD_EXAMPLE[m.n]===m.r){DEF.malls.forEach(function(d){if(d.n===m.n)m.r=d.r;});}});s.ratesV2=1;}
 
   var fmt=function(n){return Math.round(n).toLocaleString("ko-KR");};
   var num=function(t){var v=parseFloat(String(t).replace(/[^0-9.\-]/g,""));return isFinite(v)?v:0;};
