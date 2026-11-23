@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <title>의류 판매가 계산기</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -35,8 +35,8 @@
   --shadow:none; color-scheme:dark}}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
-html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:16px;line-height:1.5;
+html{-webkit-text-size-adjust:100%;font-size:70%}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:11.2px;line-height:1.5;
   font-feature-settings:"tnum";-webkit-font-smoothing:antialiased}
 .gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .inner{max-width:1080px;margin:0 auto}
@@ -145,9 +145,9 @@ body,input,button{font-variant-numeric:tabular-nums}
 :root{--muted:#705760;--line:#ead3dc;--field:#fff3f6;--field-line:#cda4b3;--bg:#fffafb;--shadow:0 4px 24px rgba(70,30,46,.04)}
 .top{padding-top:calc(env(safe-area-inset-top,0px) + 14px);padding-bottom:16px}
 .top .inner{align-items:center;gap:8px}
-.top h1{font-size:19px;letter-spacing:-.04em}
-.top p{font-size:16px;opacity:1;color:#65434f;margin-top:4px}
-.install{min-height:44px;padding:8px 10px;font-size:16px;border-radius:12px;gap:4px}
+.top h1{font-size:13.3px;letter-spacing:-.04em}
+.top p{font-size:11.2px;opacity:1;color:#65434f;margin-top:4px}
+.install{min-height:44px;padding:8px 10px;font-size:11.2px;border-radius:12px;gap:4px}
 .install svg{display:none}
 main{margin-top:0;padding-top:12px}
 .inner{max-width:1120px}
@@ -155,29 +155,29 @@ main{margin-top:0;padding-top:12px}
 .card{border-radius:16px}
 .main-inputs{padding:12px;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
 .big{min-width:0}
-.big label{font-size:16px;margin-bottom:6px;color:var(--fg);letter-spacing:-.05em}
+.big label{font-size:11.2px;margin-bottom:6px;color:var(--fg);letter-spacing:-.05em}
 .money{padding:0 10px;border-width:1px;border-radius:10px}
-.money input{font-size:24px;min-height:48px;padding:6px 0}
-.money.sm input{min-height:44px;font-size:16px}
+.money input{font-size:16.8px;min-height:48px;padding:6px 0}
+.money.sm input{min-height:44px;font-size:11.2px}
 .results-head{padding:12px 12px 8px;align-items:center;flex-wrap:wrap}
-.results-head h2{font-size:18px;letter-spacing:-.04em}
-.results-head span{font-size:16px}
+.results-head h2{font-size:12.6px;letter-spacing:-.04em}
+.results-head span{font-size:11.2px}
 .mall-row{padding:4px 12px;gap:0 8px}
-.mall-name{gap:6px;font-size:16px;letter-spacing:-.04em}
+.mall-name{gap:6px;font-size:11.2px;letter-spacing:-.04em}
 .rate{height:44px;padding:0 4px;background:var(--surface-2);border-color:var(--line)}
-.rate input{width:44px;min-height:44px;font-size:16px}
-.rate span{font-size:16px}
-.price{font-size:30px;line-height:1.2;letter-spacing:-.045em;font-weight:800}
-.price small{font-size:16px;margin-left:3px}
+.rate input{width:44px;min-height:44px;font-size:11.2px}
+.rate span{font-size:11.2px}
+.price{font-size:21px;line-height:1.2;letter-spacing:-.045em;font-weight:800}
+.price small{font-size:11.2px;margin-left:3px}
 .sub{gap:0}
-.pill{font-size:16px;padding:2px 0;background:none;letter-spacing:-.035em}
+.pill{font-size:11.2px;padding:2px 0;background:none;letter-spacing:-.035em}
 .pill.bad{padding:4px 6px}
-.toggle{min-height:44px;min-width:44px;font-size:16px;padding:0 0 0 8px}
+.toggle{min-height:44px;min-width:44px;font-size:11.2px;padding:0 0 0 8px}
 .breakdown{margin:0 12px 12px;padding:12px}
-.note{font-size:16px;padding:14px 12px;line-height:1.65}
+.note{font-size:11.2px;padding:14px 12px;line-height:1.65}
 .settings-body{gap:24px}
-.grp-title{font-size:16px;letter-spacing:0;color:var(--accent)}
-.row label,.row .lbl-edit,.row small{font-size:16px}
+.grp-title{font-size:11.2px;letter-spacing:0;color:var(--accent)}
+.row label,.row .lbl-edit,.row small{font-size:11.2px}
 .row small{margin-top:4px}
 .lbl-edit{min-height:44px}
 .reset,summary{min-height:44px}
@@ -187,24 +187,24 @@ main{margin-top:0;padding-top:12px}
 @media(prefers-color-scheme:dark){:root{--muted:#d3b5c2;--line:#624451;--field:#36252e;--field-line:#896374;--bg:#1d1418;--shadow:none}.top p{color:#e4c3d1}}
 @media(min-width:900px){
  .top{padding-top:28px;padding-bottom:28px}
- .top h1{font-size:24px}
+ .top h1{font-size:16.8px}
  .install svg{display:block}
  main{padding-top:28px}
  .layout{grid-template-columns:360px minmax(0,1fr);grid-template-rows:auto auto 1fr;gap:20px;align-items:start}
  .main-inputs{grid-column:1;grid-row:1;padding:24px;grid-template-columns:1fr;gap:24px}
  .big label{margin-bottom:10px}
- .money input{font-size:28px;min-height:56px}
+ .money input{font-size:19.6px;min-height:56px}
  .results{grid-column:2;grid-row:1 / span 3}
  .settings{grid-column:1;grid-row:2}
  .how{grid-column:1;grid-row:3}
  .results-head{padding:20px 24px 12px}
- .results-head h2{font-size:20px}
+ .results-head h2{font-size:14px}
  .mall-row{padding:10px 24px}
- .price{font-size:36px}
+ .price{font-size:25.2px}
  .note{padding:20px 24px}
  .breakdown{margin-left:24px;margin-right:24px}
 }
-@media(max-width:359px){.top .inner{flex-wrap:wrap}.main-inputs{grid-template-columns:1fr}.mall-name{gap:4px}.price{font-size:26px}.results-head{align-items:flex-start;flex-direction:column}}
+@media(max-width:359px){.top .inner{flex-wrap:wrap}.main-inputs{grid-template-columns:1fr}.mall-name{gap:4px}.price{font-size:18.2px}.results-head{align-items:flex-start;flex-direction:column}}
 </style>
 </head>
 <body>
