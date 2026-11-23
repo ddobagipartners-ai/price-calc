@@ -164,7 +164,9 @@ main{margin-top:0;padding-top:12px}
 .results-head span{font-size:11.2px}
 .mall-row{padding:4px 12px;gap:0 8px}
 .mall-name{gap:6px;font-size:14.6px;letter-spacing:-.04em;flex-wrap:nowrap}
-.mall-name>span{flex:none;width:4.6em}
+.mall-name>.nm{flex:none;width:6.3em;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.logo{flex:none;width:20px;height:20px;border-radius:6px;overflow:hidden;display:grid;place-items:center;font-size:11px;font-weight:800;color:#fff;letter-spacing:0}
+.logo img{width:100%;height:100%;object-fit:contain;background:#fff}
 .rate{height:44px;padding:0 4px;background:var(--surface-2);border-color:var(--line)}
 .rate input{width:44px;min-height:44px;font-size:11.2px}
 .rate span{font-size:11.2px}
@@ -213,6 +215,11 @@ main{margin-top:0;padding-top:12px}
 .inapp p{margin:0;font-size:12.6px;line-height:1.4}
 .inapp button{flex:none;min-height:40px;border:0;border-radius:10px;background:#fff;color:var(--accent);font:700 12.6px var(--sans);padding:0 12px;cursor:pointer}
 .inapp + .top{padding-top:14px}
+
+#malls:not(.all) .mall.extra{display:none}
+.more{width:100%;min-height:44px;border:0;border-top:1px solid var(--line);background:var(--surface-2);color:var(--accent);font:700 12.6px var(--sans);display:flex;align-items:center;justify-content:center;gap:4px;cursor:pointer}
+.more svg{width:16px;height:16px;transition:transform .2s}
+.more[aria-expanded="true"] svg{transform:rotate(180deg)}
 </style>
 </head>
 <body>
@@ -252,7 +259,8 @@ main{margin-top:0;padding-top:12px}
       <section class="card results" aria-label="쇼핑몰별 판매가">
         <div class="results-head"><h2>쇼핑몰별 판매가</h2><span>수수료율 수정 가능</span></div>
         <div id="malls"></div>
-        <p class="note">수수료율 기본값(W컨셉 27% · 에이블리 7% · 무신사 28% · 29CM 28% · 지그재그 12%)은 확인되지 않은 예시값이에요. 판매가에 가장 크게 영향을 주니 실제 계약 요율로 바꿔 주세요. 입력값은 이 기기에 저장돼요.</p>
+        <button type="button" class="more" id="more" aria-expanded="false" aria-controls="malls"><span id="more-txt">플랫폼 더보기</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
+        <p class="note">쇼핑몰 수수료율 기본값은 모두 확인되지 않은 예시값이에요. 판매가에 가장 크게 영향을 주니 실제 계약 요율로 바꿔 주세요. 입력값은 이 기기에 저장돼요.</p>
       </section>
       <details class="card settings" id="settings">
         <summary>
@@ -324,11 +332,15 @@ main{margin-top:0;padding-top:12px}
 (function(){
   var DEF={cost:15000,profit:5000,unit:1000,ship:0,pack:0,ret:0,etc1:0,etc2:0,
     etc1name:"기타 지출 1",etc2name:"기타 지출 2",vat:10,tax:11,
-    malls:[{n:"W컨셉",r:27},{n:"에이블리",r:7},{n:"무신사",r:28},{n:"29CM",r:28},{n:"지그재그",r:12}]};
+    malls:[{n:"W컨셉",r:27},{n:"에이블리",r:7},{n:"무신사",r:28},{n:"29CM",r:28},{n:"지그재그",r:12},
+      {n:"한섬",r:30},{n:"네이버",r:6},{n:"쿠팡",r:11},{n:"롯데온",r:15},{n:"CJ온스타일",r:30}]};
+  var LOGO={"W컨셉":["wconcept.co.kr","#111"],"에이블리":["a-bly.com","#ff4f7b"],"무신사":["musinsa.com","#000"],"29CM":["29cm.co.kr","#111"],"지그재그":["zigzag.kr","#fa5c8b"],
+    "한섬":["thehandsome.com","#1a1a1a"],"네이버":["smartstore.naver.com","#03c75a"],"쿠팡":["coupang.com","#e52528"],"롯데온":["lotteon.com","#e60012"],"CJ온스타일":["cjonstyle.com","#7c3aed"]};
   var KEY="apparel-price-calc-v2",s;
   try{s=JSON.parse(localStorage.getItem(KEY));}catch(e){}
   if(!s||!s.malls) s=JSON.parse(JSON.stringify(DEF));
   for(var k in DEF) if(s[k]===undefined) s[k]=DEF[k];
+  DEF.malls.forEach(function(m){if(!s.malls.some(function(x){return x.n===m.n;}))s.malls.push({n:m.n,r:m.r});});
 
   var fmt=function(n){return Math.round(n).toLocaleString("ko-KR");};
   var num=function(t){var v=parseFloat(String(t).replace(/[^0-9.\-]/g,""));return isFinite(v)?v:0;};
@@ -356,12 +368,17 @@ main{margin-top:0;padding-top:12px}
   function build(){
     box.innerHTML="";
     s.malls.forEach(function(m,i){
-      var d=document.createElement("div");d.className="mall";
-      d.innerHTML='<div class="mall-row"><div class="mall-name"><span></span><label class="rate" title="판매 수수료율"><input id="rate'+i+'" inputmode="decimal" aria-label="수수료율"><span>%</span></label></div>'+
+      var d=document.createElement("div");d.className="mall"+(i>=5?" extra":"");
+      d.innerHTML='<div class="mall-row"><div class="mall-name"><span class="nm"><span class="logo"></span><span class="mn"></span></span><label class="rate" title="판매 수수료율"><input id="rate'+i+'" inputmode="decimal" aria-label="수수료율"><span>%</span></label></div>'+
         '<div class="price" id="p'+i+'"></div>'+
         '<div class="sub"><span class="pill" id="m'+i+'"></span><button type="button" class="toggle" aria-expanded="false">계산 내역'+chev+'</button></div></div>'+
         '<div class="breakdown" id="t'+i+'"></div>';
-      d.querySelector(".mall-name span").textContent=m.n;
+      d.querySelector(".mn").textContent=m.n;
+      var lg=d.querySelector(".logo"),info=LOGO[m.n];
+      function initial(){lg.innerHTML="";lg.textContent=m.n.charAt(0);lg.style.background=info?info[1]:"var(--accent)";}
+      if(info){var im=new Image();im.alt="";im.loading="lazy";im.onerror=initial;
+        im.src="https://www.google.com/s2/favicons?domain="+info[0]+"&sz=64";lg.appendChild(im);}
+      else initial();
       var r=d.querySelector("input");r.value=m.r;
       r.addEventListener("input",function(){m.r=num(r.value);save();calc();});
       r.addEventListener("focus",function(){setTimeout(function(){r.select();},0);});
@@ -400,6 +417,14 @@ main{margin-top:0;padding-top:12px}
   });
 
   build();calc();
+
+  /* 플랫폼 더보기 */
+  var more=document.getElementById("more"),moreTxt=document.getElementById("more-txt");
+  function setMore(open){box.classList.toggle("all",open);more.setAttribute("aria-expanded",open);
+    moreTxt.textContent=open?"접기":"플랫폼 더보기 ("+(s.malls.length-5)+"곳)";}
+  more.hidden=s.malls.length<=5;
+  setMore(false);
+  more.addEventListener("click",function(){setMore(more.getAttribute("aria-expanded")!=="true");});
 
   /* 첫 방문 비용 안내 */
   var intro=document.getElementById("intro"),introKey="apparel-price-calc-intro-v1",introSeen=false;
