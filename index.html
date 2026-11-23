@@ -10,28 +10,28 @@
 <meta name="apple-mobile-web-app-title" content="판매가 계산">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#24493f">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<meta name="theme-color" content="#f7d3dd">
+<meta name="theme-color" content="#36212b" media="(prefers-color-scheme: dark)">
 <style>
 /* 모바일 우선: 상단 초록 헤더 → 핵심 입력 2칸 → 쇼핑몰별 판매가 목록(탭하면 내역) → 비용·세율 설정 */
 :root{
-  --brand:#24493f; --brand-2:#2f5d50; --on-brand:#f4f8f6;
-  --bg:#f2f4f3; --surface:#ffffff; --surface-2:#f7f9f8;
-  --fg:#16201c; --muted:#66716c; --line:#e3e8e5;
-  --accent:#2f6b58; --accent-soft:#e6f0ec;
-  --field:#fffbea; --field-line:#eadf9c;
-  --good:#1f7a48; --good-soft:#e5f4ea; --bad:#b4392a; --bad-soft:#fbe9e6;
-  --shadow:0 1px 2px rgba(20,40,32,.05),0 4px 16px rgba(20,40,32,.06);
-  --sans:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --brand:#f7d3dd; --brand-2:#fbe4ea; --on-brand:#2a1f24;
+  --bg:#fffafb; --surface:#ffffff; --surface-2:#fff3f6;
+  --fg:#2a1f24; --muted:#705760; --line:#ead3dc;
+  --accent:#c2456a; --accent-soft:#fbe4ea;
+  --field:#fff3f6; --field-line:#cda4b3;
+  --good:#c2456a; --good-soft:#fff3f6; --bad:#ad304d; --bad-soft:#fce8ee;
+  --shadow:0 1px 2px rgba(70,30,46,.05),0 4px 16px rgba(70,30,46,.06);
+  --sans:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
   color-scheme:light;
 }
 @media (prefers-color-scheme: dark){:root{
-  --brand:#16302a; --brand-2:#1d3d35; --on-brand:#e8f1ed;
-  --bg:#0f1513; --surface:#18201d; --surface-2:#1d2622;
-  --fg:#e9eeec; --muted:#97a39e; --line:#2a3531;
-  --accent:#7cc4aa; --accent-soft:#1f322b;
-  --field:#272414; --field-line:#4d4626;
-  --good:#6fd39a; --good-soft:#18301f; --bad:#f08b7b; --bad-soft:#3a1d18;
+  --brand:#36212b; --brand-2:#452b37; --on-brand:#fff0f5;
+  --bg:#1d1418; --surface:#2a1d23; --surface-2:#33232b;
+  --fg:#fff0f5; --muted:#d3b5c2; --line:#624451;
+  --accent:#f08fae; --accent-soft:#492b38;
+  --field:#36252e; --field-line:#896374;
+  --good:#f08fae; --good-soft:#492b38; --bad:#ff9fb6; --bad-soft:#49232f;
   --shadow:none; color-scheme:dark}}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -45,9 +45,9 @@ body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);font-
 .top{background:var(--brand);color:var(--on-brand);padding-top:calc(env(safe-area-inset-top,0px) + 18px);padding-bottom:64px}
 .top .inner{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
 .top h1{margin:0;font-size:1.35rem;font-weight:700;letter-spacing:-.02em}
-.top p{margin:4px 0 0;font-size:.88rem;opacity:.8}
+.top p{margin:4px 0 0;font-size:1rem;opacity:.8}
 .install{flex:none;display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.1);
-  color:var(--on-brand);font:600 .85rem var(--sans);padding:8px 12px;border-radius:999px;cursor:pointer}
+  color:var(--on-brand);font:600 1rem var(--sans);padding:8px 12px;border-radius:999px;cursor:pointer}
 .install:hover{background:rgba(255,255,255,.18)}
 .install svg{width:16px;height:16px}
 
@@ -60,71 +60,71 @@ main{margin-top:-48px;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 40px
 
 /* 핵심 입력 */
 .main-inputs{padding:18px;display:grid;gap:14px}
-.big label{display:block;font-size:.85rem;font-weight:600;color:var(--muted);margin-bottom:6px}
+.big label{display:block;font-size:1rem;font-weight:600;color:var(--muted);margin-bottom:6px}
 .money{display:flex;align-items:center;background:var(--field);border:1.5px solid var(--field-line);border-radius:12px;padding:0 14px;transition:border-color .15s,box-shadow .15s}
 .money:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
 .money input{flex:1;width:100%;min-width:0;border:0;background:transparent;color:var(--fg);font:700 1.5rem var(--sans);letter-spacing:-.02em;text-align:right;padding:10px 0;outline:none}
 .money span{margin-left:6px;color:var(--muted);font-weight:600}
 .money.sm input{font-size:1.05rem;padding:9px 0}
 .money.sm{padding:0 10px;border-radius:10px}
-.hint{font-size:.78rem;color:var(--muted);margin-top:5px}
+.hint{font-size:1rem;color:var(--muted);margin-top:5px}
 
 /* 설정 (접기) */
 details.settings>summary{list-style:none;cursor:pointer;padding:16px 18px;display:flex;justify-content:space-between;align-items:center;font-weight:700}
 details.settings>summary::-webkit-details-marker{display:none}
-details.settings>summary small{display:block;font-weight:500;color:var(--muted);font-size:.8rem;margin-top:2px}
+details.settings>summary small{display:block;font-weight:500;color:var(--muted);font-size:1rem;margin-top:2px}
 .chev{width:20px;height:20px;transition:transform .2s;color:var(--muted);flex:none}
 details[open] .chev{transform:rotate(180deg)}
 .settings-body{padding:0 18px 18px;display:grid;gap:18px}
-.grp-title{font-size:.75rem;font-weight:700;color:var(--muted);letter-spacing:.06em;margin:0 0 8px}
+.grp-title{font-size:1rem;font-weight:700;color:var(--muted);letter-spacing:.06em;margin:0 0 8px}
 .rows{display:grid;gap:8px}
 .row{display:grid;grid-template-columns:minmax(0,1fr) 128px;gap:10px;align-items:center}
-.row label,.row .lbl-edit{font-size:.92rem}
-.row small{display:block;color:var(--muted);font-size:.74rem;line-height:1.3}
+.row label,.row .lbl-edit{font-size:1rem}
+.row small{display:block;color:var(--muted);font-size:1rem;line-height:1.3}
 .lbl-edit{border:0;border-bottom:1px dashed var(--line);background:transparent;color:var(--fg);font:inherit;width:100%;padding:4px 0;min-width:0}
 .lbl-edit:focus{outline:none;border-color:var(--accent)}
-.reset{justify-self:start;border:1px solid var(--line);background:var(--surface-2);color:var(--fg);font:600 .85rem var(--sans);padding:9px 14px;border-radius:10px;cursor:pointer}
+.reset{justify-self:start;border:1px solid var(--line);background:var(--surface-2);color:var(--fg);font:600 1rem var(--sans);padding:9px 14px;border-radius:10px;cursor:pointer}
 
 /* 결과 */
 .results-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:18px 18px 6px}
 .results-head h2{margin:0;font-size:1.05rem}
-.results-head span{font-size:.8rem;color:var(--muted)}
+.results-head span{font-size:1rem;color:var(--muted)}
 .mall{border-top:1px solid var(--line)}
 .mall:first-of-type{border-top:0}
 .mall-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding:14px 18px;align-items:center}
 .mall-name{font-weight:700;font-size:1rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .rate{display:inline-flex;align-items:center;background:var(--field);border:1px solid var(--field-line);border-radius:8px;padding:0 6px;height:28px}
-.rate input{width:38px;border:0;background:transparent;color:var(--fg);font:700 .88rem var(--sans);text-align:right;outline:none;padding:0}
-.rate span{font-size:.78rem;color:var(--muted);margin-left:2px}
+.rate input{width:38px;border:0;background:transparent;color:var(--fg);font:700 1rem var(--sans);text-align:right;outline:none;padding:0}
+.rate span{font-size:1rem;color:var(--muted);margin-left:2px}
 .rate:focus-within{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
 .price{text-align:right;font-weight:800;font-size:1.45rem;letter-spacing:-.03em;color:var(--fg);white-space:nowrap}
-.price small{font-size:.85rem;font-weight:600;margin-left:1px;color:var(--muted)}
+.price small{font-size:1rem;font-weight:600;margin-left:1px;color:var(--muted)}
 .sub{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
-.pill{display:inline-flex;align-items:center;gap:4px;font-size:.8rem;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--good-soft);color:var(--good)}
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:1rem;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--good-soft);color:var(--good)}
 .pill.bad{background:var(--bad-soft);color:var(--bad)}
-.toggle{border:0;background:none;color:var(--accent);font:600 .82rem var(--sans);cursor:pointer;padding:4px 0;display:inline-flex;align-items:center;gap:2px}
+.toggle{border:0;background:none;color:var(--accent);font:600 1rem var(--sans);cursor:pointer;padding:4px 0;display:inline-flex;align-items:center;gap:2px}
 .toggle svg{width:16px;height:16px;transition:transform .2s}
 .mall.open .toggle svg{transform:rotate(180deg)}
 .breakdown{display:none;margin:0 18px 16px;background:var(--surface-2);border-radius:12px;padding:10px 14px}
 .mall.open .breakdown{display:block}
-table{width:100%;border-collapse:collapse;font-size:.86rem}
+table{width:100%;border-collapse:collapse;font-size:1rem}
 td{padding:4px 0}
 td.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
 tr.minus td:first-child{color:var(--muted);padding-left:10px}
 tr.minus td.n{color:var(--muted)}
 tr.sum td{border-top:1px solid var(--line);font-weight:700;padding-top:7px}
-tr.final td{font-size:.95rem}
-.err{color:var(--bad);font-size:.85rem;grid-column:1/-1}
-.note{font-size:.8rem;color:var(--muted);padding:12px 18px 18px;margin:0;border-top:1px solid var(--line);line-height:1.55}
+tr.final td{font-size:1rem}
+.err{color:var(--bad);font-size:1rem;grid-column:1/-1}
+.note{font-size:1rem;color:var(--muted);padding:12px 18px 18px;margin:0;border-top:1px solid var(--line);line-height:1.55}
 details.how{padding:0}
-details.how>summary{cursor:pointer;padding:14px 18px;font-weight:700;font-size:.92rem}
-details.how div{padding:0 18px 16px;font-size:.86rem;color:var(--muted)}
-details.how code{display:block;background:var(--surface-2);padding:10px;border-radius:8px;color:var(--fg);font-size:.8rem;word-break:keep-all;overflow-wrap:anywhere;margin:8px 0}
+details.how>summary{cursor:pointer;padding:14px 18px;font-weight:700;font-size:1rem}
+details.how div{padding:0 18px 16px;font-size:1rem;color:var(--muted)}
+details.how code{display:block;background:var(--surface-2);padding:10px;border-radius:8px;color:var(--fg);font-size:1rem;word-break:keep-all;overflow-wrap:anywhere;margin:8px 0}
 
 button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
 /* 홈 화면 추가 안내 시트 */
-.sheet-bg{position:fixed;inset:0;background:rgba(10,20,16,.45);z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.sheet-bg{position:fixed;inset:0;background:rgba(29,20,24,.45);z-index:20;display:flex;align-items:flex-end;justify-content:center}
 .sheet{background:var(--surface);color:var(--fg);width:100%;max-width:440px;border-radius:20px 20px 0 0;
   padding:22px max(20px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 22px) max(20px,env(safe-area-inset-left,0px));
   animation:up .22s ease-out}
@@ -132,12 +132,79 @@ button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid
 @keyframes up{from{transform:translateY(30px);opacity:.4}to{transform:none;opacity:1}}
 @media (prefers-reduced-motion:reduce){.sheet{animation:none}}
 .sheet h3{margin:0 0 4px;font-size:1.1rem}
-.sheet p{margin:0 0 14px;color:var(--muted);font-size:.9rem}
-.sheet ol{margin:0 0 18px;padding-left:20px;display:grid;gap:8px;font-size:.95rem}
+.sheet p{margin:0 0 14px;color:var(--muted);font-size:1rem}
+.sheet ol{margin:0 0 18px;padding-left:20px;display:grid;gap:8px;font-size:1rem}
 .sheet b{color:var(--accent)}
-.sheet .close{width:100%;border:0;background:var(--brand-2);color:#fff;font:700 1rem var(--sans);padding:13px;border-radius:12px;cursor:pointer}
+.sheet-actions{display:grid;gap:10px}
+.sheet .close{min-height:44px;width:100%;border:0;background:var(--brand-2);color:var(--on-brand);font:700 1rem var(--sans);padding:13px;border-radius:12px;cursor:pointer}
 .toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 20px);transform:translateX(-50%);background:var(--fg);color:var(--bg);
-  padding:10px 16px;border-radius:999px;font-size:.88rem;font-weight:600;z-index:30}
+  padding:10px 16px;border-radius:999px;font-size:1rem;font-weight:600;z-index:30}
+
+/* Compact first screen, with the same reading and keyboard order on all widths. */
+body,input,button{font-variant-numeric:tabular-nums}
+:root{--muted:#705760;--line:#ead3dc;--field:#fff3f6;--field-line:#cda4b3;--bg:#fffafb;--shadow:0 4px 24px rgba(70,30,46,.04)}
+.top{padding-top:calc(env(safe-area-inset-top,0px) + 14px);padding-bottom:16px}
+.top .inner{align-items:center;gap:8px}
+.top h1{font-size:19px;letter-spacing:-.04em}
+.top p{font-size:16px;opacity:1;color:#65434f;margin-top:4px}
+.install{min-height:44px;padding:8px 10px;font-size:16px;border-radius:12px;gap:4px}
+.install svg{display:none}
+main{margin-top:0;padding-top:12px}
+.inner{max-width:1120px}
+.layout{gap:12px}
+.card{border-radius:16px}
+.main-inputs{padding:12px;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.big{min-width:0}
+.big label{font-size:16px;margin-bottom:6px;color:var(--fg);letter-spacing:-.05em}
+.money{padding:0 10px;border-width:1px;border-radius:10px}
+.money input{font-size:24px;min-height:48px;padding:6px 0}
+.money.sm input{min-height:44px;font-size:16px}
+.results-head{padding:12px 12px 8px;align-items:center;flex-wrap:wrap}
+.results-head h2{font-size:18px;letter-spacing:-.04em}
+.results-head span{font-size:16px}
+.mall-row{padding:4px 12px;gap:0 8px}
+.mall-name{gap:6px;font-size:16px;letter-spacing:-.04em}
+.rate{height:44px;padding:0 4px;background:var(--surface-2);border-color:var(--line)}
+.rate input{width:44px;min-height:44px;font-size:16px}
+.rate span{font-size:16px}
+.price{font-size:30px;line-height:1.2;letter-spacing:-.045em;font-weight:800}
+.price small{font-size:16px;margin-left:3px}
+.sub{gap:0}
+.pill{font-size:16px;padding:2px 0;background:none;letter-spacing:-.035em}
+.pill.bad{padding:4px 6px}
+.toggle{min-height:44px;min-width:44px;font-size:16px;padding:0 0 0 8px}
+.breakdown{margin:0 12px 12px;padding:12px}
+.note{font-size:16px;padding:14px 12px;line-height:1.65}
+.settings-body{gap:24px}
+.grp-title{font-size:16px;letter-spacing:0;color:var(--accent)}
+.row label,.row .lbl-edit,.row small{font-size:16px}
+.row small{margin-top:4px}
+.lbl-edit{min-height:44px}
+.reset,summary{min-height:44px}
+.settings>summary small{line-height:1.6}
+.sheet{max-height:90dvh;overflow:auto}
+.toast{width:max-content;max-width:calc(100% - 32px);text-align:center;border-radius:16px}
+@media(prefers-color-scheme:dark){:root{--muted:#d3b5c2;--line:#624451;--field:#36252e;--field-line:#896374;--bg:#1d1418;--shadow:none}.top p{color:#e4c3d1}}
+@media(min-width:900px){
+ .top{padding-top:28px;padding-bottom:28px}
+ .top h1{font-size:24px}
+ .install svg{display:block}
+ main{padding-top:28px}
+ .layout{grid-template-columns:360px minmax(0,1fr);grid-template-rows:auto auto 1fr;gap:20px;align-items:start}
+ .main-inputs{grid-column:1;grid-row:1;padding:24px;grid-template-columns:1fr;gap:24px}
+ .big label{margin-bottom:10px}
+ .money input{font-size:28px;min-height:56px}
+ .results{grid-column:2;grid-row:1 / span 3}
+ .settings{grid-column:1;grid-row:2}
+ .how{grid-column:1;grid-row:3}
+ .results-head{padding:20px 24px 12px}
+ .results-head h2{font-size:20px}
+ .mall-row{padding:10px 24px}
+ .price{font-size:36px}
+ .note{padding:20px 24px}
+ .breakdown{margin-left:24px;margin-right:24px}
+}
+@media(max-width:359px){.top .inner{flex-wrap:wrap}.main-inputs{grid-template-columns:1fr}.mall-name{gap:4px}.price{font-size:26px}.results-head{align-items:flex-start;flex-direction:column}}
 </style>
 </head>
 <body>
@@ -145,7 +212,7 @@ button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid
   <div class="inner">
     <div>
       <h1>의류 판매가 계산기</h1>
-      <p>원가와 남기고 싶은 돈을 넣으면 쇼핑몰별 판매가가 바로 나와요</p>
+      <p>한 벌의 원가부터 판매가까지.</p>
     </div>
     <button type="button" class="install" id="install" hidden>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
@@ -156,20 +223,23 @@ button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid
 
 <main class="gut">
   <div class="inner layout">
-    <div class="side">
       <section class="card main-inputs" aria-label="핵심 입력">
         <div class="big">
           <label for="cost">원가 (부가세 포함)</label>
           <div class="money"><input id="cost" inputmode="numeric" data-k="cost" autocomplete="off"><span>원</span></div>
-          <div class="hint">옷 한 벌 매입가·제작비. 원가 부가세는 돌려받는다고 계산해요.</div>
         </div>
         <div class="big">
-          <label for="profit">남기고 싶은 돈 (한 벌당)</label>
+          <label for="profit">남길 돈 (세후)</label>
           <div class="money"><input id="profit" inputmode="numeric" data-k="profit" autocomplete="off"><span>원</span></div>
-          <div class="hint">법인세까지 낸 뒤 이만큼 남도록 판매가를 정해요.</div>
         </div>
       </section>
 
+
+      <section class="card results" aria-label="쇼핑몰별 판매가">
+        <div class="results-head"><h2>쇼핑몰별 판매가</h2><span>수수료율 수정 가능</span></div>
+        <div id="malls"></div>
+        <p class="note">수수료율 기본값(W컨셉 27% · 에이블리 7% · 무신사 28% · 29CM 28% · 지그재그 12%)은 확인되지 않은 예시값이에요. 판매가에 가장 크게 영향을 주니 실제 계약 요율로 바꿔 주세요. 입력값은 이 기기에 저장돼요.</p>
+      </section>
       <details class="card settings" id="settings">
         <summary>
           <div>비용 · 세율 설정<small id="settings-sum"></small></div>
@@ -183,7 +253,7 @@ button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid
                 <div class="money sm"><input id="ship" inputmode="numeric" data-k="ship"><span>원</span></div></div>
               <div class="row"><label for="pack">포장비<small>폴리백·박스 등</small></label>
                 <div class="money sm"><input id="pack" inputmode="numeric" data-k="pack"><span>원</span></div></div>
-              <div class="row"><label for="ret">반품비 (평균)<small>반품률 10% × 왕복 6,000원</small></label>
+              <div class="row"><label for="ret">반품비 (평균)<small>한 벌당 평균 반품 비용</small></label>
                 <div class="money sm"><input id="ret" inputmode="numeric" data-k="ret"><span>원</span></div></div>
               <div class="row"><input class="lbl-edit" id="etc1name" aria-label="기타 지출 1 이름" data-k="etc1name">
                 <div class="money sm"><input id="etc1" inputmode="numeric" data-k="etc1" aria-label="기타 지출 1 금액"><span>원</span></div></div>
@@ -205,22 +275,14 @@ button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid
           <button type="button" class="reset" id="reset">처음 값으로 되돌리기</button>
         </div>
       </details>
-    </div>
-
-    <div class="side">
-      <section class="card" aria-label="쇼핑몰별 판매가">
-        <div class="results-head"><h2>쇼핑몰별 판매가</h2><span>수수료율 칸을 눌러 수정</span></div>
-        <div id="malls"></div>
-        <p class="note">수수료율 기본값(W컨셉 27% · 에이블리 7% · 무신사 28% · 29CM 28% · 지그재그 12%)은 확인되지 않은 예시값이에요. 판매가에 가장 크게 영향을 주니 실제 계약 요율로 바꿔 주세요. 입력값은 이 기기에 저장돼요.</p>
-      </section>
       <details class="card how">
         <summary>계산 방법</summary>
         <div>
+          <p>옷 한 벌 매입가·제작비. 원가 부가세는 돌려받는다고 계산해요. 법인세까지 낸 뒤 이만큼 남도록 판매가를 정해요.</p>
           <code>판매가 = 올림( (남길 돈 ÷ (1 − 법인세율) + 원가 ÷ (1 + 부가세율) + 배송·포장·반품·기타) ÷ (1 ÷ (1 + 부가세율) − 수수료율) )</code>
           매출 = 판매가 − 부가세(판매가 × 10/110). 영업이익 = 매출 − 원가(부가세 제외) − 수수료 − 배송·포장·반품·기타. 남는 돈 = 영업이익 − 법인세. 판매가를 올림 단위로 올리기 때문에 남는 돈이 목표보다 조금 많아요. 법인세는 1년 이익 전체에 매기는 세금이라 한 벌당 값은 어림값이에요.
         </div>
       </details>
-    </div>
   </div>
 </main>
 
@@ -232,14 +294,24 @@ button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid
     <button type="button" class="close" id="sheet-close">확인</button>
   </div>
 </div>
+<div class="sheet-bg" id="intro" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="intro-title" aria-describedby="intro-desc">
+    <h3 id="intro-title">실제 비용부터 넣어 주세요</h3>
+    <p id="intro-desc">정확한 판매가를 위해 배송비·포장비·반품비·기타 지출과 쇼핑몰 수수료율을 입력해 주세요. 지금은 0원으로 되어 있어요.</p>
+    <div class="sheet-actions">
+      <button type="button" class="close" id="intro-start">지금 입력하기</button>
+      <button type="button" class="close" id="intro-later">나중에</button>
+    </div>
+  </div>
+</div>
 <div class="toast" id="toast" hidden></div>
 
 <script>
 (function(){
-  var DEF={cost:15000,profit:5000,unit:1000,ship:3000,pack:500,ret:600,etc1:0,etc2:0,
+  var DEF={cost:15000,profit:5000,unit:1000,ship:0,pack:0,ret:0,etc1:0,etc2:0,
     etc1name:"기타 지출 1",etc2name:"기타 지출 2",vat:10,tax:11,
     malls:[{n:"W컨셉",r:27},{n:"에이블리",r:7},{n:"무신사",r:28},{n:"29CM",r:28},{n:"지그재그",r:12}]};
-  var KEY="apparel-price-calc-v1",s;
+  var KEY="apparel-price-calc-v2",s;
   try{s=JSON.parse(localStorage.getItem(KEY));}catch(e){}
   if(!s||!s.malls) s=JSON.parse(JSON.stringify(DEF));
   for(var k in DEF) if(s[k]===undefined) s[k]=DEF[k];
@@ -315,6 +387,47 @@ button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid
 
   build();calc();
 
+  /* 첫 방문 비용 안내 */
+  var intro=document.getElementById("intro"),introKey="apparel-price-calc-intro-v1",introSeen=false;
+  var introStart=document.getElementById("intro-start"),introLater=document.getElementById("intro-later");
+  var introReturnFocus=document.activeElement,previousOverflow;
+  var pageParts=document.querySelectorAll("header,main");
+  try{introSeen=localStorage.getItem(introKey)==="1";}catch(e){}
+  function closeIntro(edit){
+    if(intro.hidden)return;
+    intro.hidden=true;
+    try{localStorage.setItem(introKey,"1");}catch(e){}
+    pageParts.forEach(function(el){el.inert=false;});
+    document.body.style.overflow=previousOverflow;
+    if(edit){
+      document.getElementById("settings").open=true;
+      var ship=document.getElementById("ship");
+      ship.focus({preventScroll:true});
+      ship.scrollIntoView({behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"center"});
+    }else if(introReturnFocus&&introReturnFocus!==document.body){
+      introReturnFocus.focus({preventScroll:true});
+    }
+  }
+  introStart.addEventListener("click",function(){closeIntro(true);});
+  introLater.addEventListener("click",function(){closeIntro(false);});
+  intro.addEventListener("click",function(e){if(e.target===intro)closeIntro(false);});
+  document.addEventListener("keydown",function(e){
+    if(intro.hidden)return;
+    if(e.key==="Escape"){e.preventDefault();closeIntro(false);}
+    else if(e.key==="Tab"){
+      e.preventDefault();
+      (document.activeElement===introStart?introLater:introStart).focus();
+    }
+  });
+  if(!introSeen){
+    document.getElementById("sheet").hidden=true;
+    previousOverflow=document.body.style.overflow;
+    document.body.style.overflow="hidden";
+    pageParts.forEach(function(el){el.inert=true;});
+    intro.hidden=false;
+    introStart.focus({preventScroll:true});
+  }
+
   /* 홈 화면에 추가 */
   var btn=document.getElementById("install"),sheet=document.getElementById("sheet"),steps=document.getElementById("sheet-steps"),deferred=null;
   var standalone=window.matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
@@ -324,7 +437,7 @@ button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid
   if(!standalone) btn.hidden=false;
   window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();deferred=e;});
   window.addEventListener("appinstalled",function(){btn.hidden=true;toast("홈 화면에 추가됐어요");});
-  function openSheet(list,desc){steps.innerHTML=list.map(function(x){return "<li>"+x+"</li>";}).join("");
+  function openSheet(list,desc){if(!intro.hidden)return;steps.innerHTML=list.map(function(x){return "<li>"+x+"</li>";}).join("");
     document.getElementById("sheet-desc").textContent=desc||"앱처럼 바로 열 수 있어요.";sheet.hidden=false;}
   btn.addEventListener("click",function(){
     if(deferred){deferred.prompt();deferred.userChoice.then(function(){deferred=null;});return;}
