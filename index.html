@@ -206,9 +206,22 @@ main{margin-top:0;padding-top:12px}
  .breakdown{margin-left:24px;margin-right:24px}
 }
 @media(max-width:359px){.top .inner{flex-wrap:wrap}.main-inputs{grid-template-columns:1fr}.mall-name{gap:4px}.price{font-size:18.2px}.results-head{align-items:flex-start;flex-direction:column}}
+
+/* 앱 안 브라우저 안내 */
+.inapp{background:var(--accent);color:#fff;padding-top:calc(env(safe-area-inset-top,0px) + 10px);padding-bottom:10px}
+.inapp .inner{display:flex;align-items:center;gap:10px;justify-content:space-between}
+.inapp p{margin:0;font-size:12.6px;line-height:1.4}
+.inapp button{flex:none;min-height:40px;border:0;border-radius:10px;background:#fff;color:var(--accent);font:700 12.6px var(--sans);padding:0 12px;cursor:pointer}
+.inapp + .top{padding-top:14px}
 </style>
 </head>
 <body>
+<div class="inapp gut" id="inapp" hidden>
+  <div class="inner">
+    <p id="inapp-msg">카카오톡 안에서 열렸어요. 입력값 저장과 홈 화면 추가는 기본 브라우저에서 더 잘 돼요.</p>
+    <button type="button" id="inapp-open">다른 브라우저로 열기</button>
+  </div>
+</div>
 <header class="top gut">
   <div class="inner">
     <div>
@@ -428,6 +441,27 @@ main{margin-top:0;padding-top:12px}
     intro.hidden=false;
     introStart.focus({preventScroll:true});
   }
+
+  /* 앱 안 브라우저(카카오톡 등)에서 열면 외부 브라우저로 */
+  (function(){
+    var ua=navigator.userAgent,bar=document.getElementById("inapp"),msg=document.getElementById("inapp-msg"),go=document.getElementById("inapp-open");
+    var isKakao=/KAKAOTALK/i.test(ua),isAndroid=/Android/i.test(ua),isIOS=/iPhone|iPad|iPod/i.test(ua);
+    var other=/NAVER|Instagram|FBAN|FBAV|Line\/|DaumApps|everytimeApp|BAND/i.test(ua);
+    if(!isKakao&&!other)return;
+    var url=location.href.split("#")[0];
+    function openExternal(){
+      if(isKakao){location.href="kakaotalk://web/openExternal?url="+encodeURIComponent(url);return;}
+      if(isAndroid){location.href="intent://"+url.replace(/^https?:\/\//,"")+"#Intent;scheme=https;package=com.android.chrome;end";return;}
+      try{navigator.clipboard.writeText(url).then(function(){toast("주소를 복사했어요. Safari에 붙여 넣어 주세요");},function(){toast("오른쪽 아래 ⋯ 메뉴에서 'Safari로 열기'를 눌러 주세요");});}
+      catch(e){toast("오른쪽 아래 ⋯ 메뉴에서 'Safari로 열기'를 눌러 주세요");}
+    }
+    if(!isKakao){msg.textContent="앱 안 브라우저에서 열렸어요. 입력값 저장과 홈 화면 추가는 기본 브라우저에서 더 잘 돼요.";
+      if(isIOS)go.textContent="주소 복사";}
+    bar.hidden=false;
+    go.addEventListener("click",openExternal);
+    var tried=false;try{tried=sessionStorage.getItem("inapp-tried")==="1";sessionStorage.setItem("inapp-tried","1");}catch(e){}
+    if(isKakao&&!tried) setTimeout(openExternal,300);
+  })();
 
   /* 홈 화면에 추가 */
   var btn=document.getElementById("install"),sheet=document.getElementById("sheet"),steps=document.getElementById("sheet-steps"),deferred=null;
